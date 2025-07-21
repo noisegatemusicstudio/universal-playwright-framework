@@ -63,28 +63,29 @@ export default defineConfig({
       name: 'chromium',
       use: { 
         ...devices['Desktop Chrome'],
-        // Use prepared auth state.
-        storageState: 'playwright/.auth/user.json',
+        // Use prepared auth state when available.
+        // storageState: 'playwright/.auth/user.json',
       },
-      dependencies: ['setup'],
+      // Remove auth dependency for testing external sites
+      // dependencies: ['setup'],
     },
 
     {
       name: 'firefox',
       use: { 
         ...devices['Desktop Firefox'],
-        storageState: 'playwright/.auth/user.json',
+        // storageState: 'playwright/.auth/user.json',
       },
-      dependencies: ['setup'],
+      // dependencies: ['setup'],
     },
 
     {
       name: 'webkit',
       use: { 
         ...devices['Desktop Safari'],
-        storageState: 'playwright/.auth/user.json',
+        // storageState: 'playwright/.auth/user.json',
       },
-      dependencies: ['setup'],
+      // dependencies: ['setup'],
     },
 
     /* Test against mobile viewports. */
@@ -92,17 +93,17 @@ export default defineConfig({
       name: 'mobile-chrome',
       use: { 
         ...devices['Pixel 5'],
-        storageState: 'playwright/.auth/user.json',
+        // storageState: 'playwright/.auth/user.json',
       },
-      dependencies: ['setup'],
+      // dependencies: ['setup'],
     },
     {
       name: 'mobile-safari',
       use: { 
         ...devices['iPhone 12'],
-        storageState: 'playwright/.auth/user.json',
+        // storageState: 'playwright/.auth/user.json',
       },
-      dependencies: ['setup'],
+      // dependencies: ['setup'],
     },
 
     /* Test against branded browsers. */
@@ -117,12 +118,16 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
+  // Comment out webServer for testing with external sites
+  // Uncomment and configure this when testing your local app:
+  /*
   webServer: {
     command: 'npm run dev',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
   },
+  */
   
   /* Global setup and teardown */
   globalSetup: require.resolve('./src/utils/global-setup.ts'),

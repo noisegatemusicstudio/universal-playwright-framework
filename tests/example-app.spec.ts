@@ -13,7 +13,6 @@
 import { test, expect } from '@playwright/test';
 import { TestDataFactory } from '@fixtures/test-data-factory';
 import { BasePage } from '@/pages/base-page';
-import { NavigationComponent } from '@/components/navigation-component';
 
 // Example page object for your app - customize this
 class ExamplePage extends BasePage {
@@ -23,12 +22,11 @@ class ExamplePage extends BasePage {
 
   async getPageTitle(): Promise<string> {
     // 👈 Update selector to match your app's title element
-    return await this.getElementText(this.page.locator('h1'));
+    return await this.getElementText(this.page.locator('h1').first());
   }
 
-  async clickMainButton(): Promise<void> {
-    // 👈 Update selector to match your app's main CTA button
-    await this.clickElement(this.page.locator('[data-testid="main-cta"]'));
+  async getPageUrl(): Promise<string> {
+    return this.getCurrentUrl();
   }
 }
 
@@ -40,29 +38,22 @@ test.describe('Example App Tests', () => {
       await examplePage.goto();
       
       // 👈 Customize these assertions for your app
-      await expect(page).toHaveTitle(/Your App Name/); // Update expected title
+      await expect(page).toHaveTitle(/Example Domain/); // Update expected title
       
-      const pageTitle = await examplePage.getPageTitle();
-      expect(pageTitle).toBeTruthy();
-      
-      // Test navigation component if it exists
-      const navigation = new NavigationComponent(page);
-      const isLoggedIn = await navigation.isUserLoggedIn();
-      expect(typeof isLoggedIn).toBe('boolean');
+      const pageUrl = await examplePage.getPageUrl();
+      expect(pageUrl).toContain('example.com');
     });
 
-    test('should handle user interactions', async ({ page }) => {
+    test('should load page content', async ({ page }) => {
       const examplePage = new ExamplePage(page);
       
       await examplePage.goto();
-      await examplePage.clickMainButton();
       
-      // 👈 Add assertions based on what your button does
-      // For example, if it navigates to a new page:
-      // await expect(page).toHaveURL('/new-page');
+      // Check if page has loaded
+      const pageTitle = await examplePage.getPageTitle();
+      expect(pageTitle).toBeTruthy();
       
-      // Or if it shows a modal:
-      // await expect(page.locator('[data-testid="modal"]')).toBeVisible();
+      console.log('Page title:', pageTitle);
     });
   });
 
@@ -74,19 +65,12 @@ test.describe('Example App Tests', () => {
       // Use the data in your test
       console.log('Generated test user:', userData.email);
       
-      // Example: Fill a form with generated data
-      await page.goto('/contact'); // 👈 Update with your app's contact page
+      const examplePage = new ExamplePage(page);
+      await examplePage.goto();
       
-      // 👈 Update selectors to match your form fields
-      if (await page.locator('[data-testid="name-input"]').isVisible()) {
-        await page.fill('[data-testid="name-input"]', `${userData.firstName} ${userData.lastName}`);
-      }
-      
-      if (await page.locator('[data-testid="email-input"]').isVisible()) {
-        await page.fill('[data-testid="email-input"]', userData.email);
-      }
-      
-      // Add more form interactions as needed for your app
+      // Verify page loads with generated data context
+      const pageUrl = await examplePage.getPageUrl();
+      expect(pageUrl).toBeTruthy();
     });
   });
 
@@ -102,12 +86,7 @@ test.describe('Example App Tests', () => {
       const title = await examplePage.getPageTitle();
       expect(title).toBeTruthy();
       
-      // Test mobile navigation if applicable
-      const navigation = new NavigationComponent(page);
-      if (await page.locator('[data-testid="menu-toggle"]').isVisible()) {
-        await navigation.toggleMobileMenu();
-        // Add assertions for mobile menu behavior
-      }
+      console.log('Mobile test completed for:', title);
     });
   });
 });
