@@ -147,7 +147,7 @@ export abstract class BasePage {
     } else {
       // Wait for any URL change
       const currentUrl = this.getCurrentUrl();
-      await this.page.waitForURL(url => url !== currentUrl, { timeout });
+      await this.page.waitForURL(url => url.toString() !== currentUrl, { timeout });
     }
   }
 

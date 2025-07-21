@@ -2,7 +2,7 @@
  * Navigation component for common navigation interactions
  */
 
-import { Page } from '@playwright/test';
+import { Page, Locator } from '@playwright/test';
 import { BaseComponent } from './base-component';
 
 export class NavigationComponent extends BaseComponent {
